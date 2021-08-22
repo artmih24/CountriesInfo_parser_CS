@@ -17,10 +17,22 @@ namespace Test_task
 {
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// объект класса DataViewer для обращения к нему с целью вывода информации
+        /// </summary>
         DataViewer dataviewer;
-        DataManager datamanager;
+        /// <summary>
+        /// объект класса UIManager для обращения к нему с целью изменения свойств элементов интерфейса
+        /// </summary>
         UIManager UImanager;
+        /// <summary>
+        /// объект класса DataManager для обращения к нему с целью управления данными в БД
+        /// </summary>
+        DataManager datamanager;
 
+        /// <summary>
+        /// инициализация формы и создание объектов классов
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -29,7 +41,11 @@ namespace Test_task
             UImanager = new UIManager(this);
         }
 
-        // поиск по стране
+        /// <summary>
+        /// поиск по стране
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SearchButton_Click(object sender, EventArgs e)
         {
             UImanager.ClearSortComboBox();
@@ -114,35 +130,74 @@ namespace Test_task
                 Dialog.Message("Строка поиска страны пустая.");
         }
 
+        /// <summary>
+        /// вывод всех записей из базы данных в порядке добавления
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataBaseButton_Click(object sender, EventArgs e)
         {
             UImanager.SetSortComboBoxText("В порядке добавления");
             datamanager.GetUnsortedData();
         }
 
+        /// <summary>
+        /// вывод всех записей из базы данных с указанной сортировкой
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SortComboBox_SelectedIndexChanged_RadioButton_CheckedChanged(object sender, EventArgs e)
         {
             datamanager.GetSortedData();
         }
     }
 
-    // класс Country - для десериализации данных, полученных в формате JSON
+    /// <summary>
+    /// класс Country (страна) - для десериализации данных, полученных в формате JSON
+    /// </summary>
     class Country
     {
+        /// <summary>
+        /// название страны
+        /// </summary>
         public string name { get; set; }
+        /// <summary>
+        /// трехбуквенный код страны
+        /// </summary>
         public string alpha3Code { get; set; }
+        /// <summary>
+        /// название столицы страны
+        /// </summary>
         public string capital { get; set; }
+        /// <summary>
+        /// площадь территории страны [км^2]
+        /// </summary>
         public double area { get; set; }
+        /// <summary>
+        /// население страны [чел]
+        /// </summary>
         public long population { get; set; }
+        /// <summary>
+        /// регион страны (Европа, Азия, Америка и т.д.)
+        /// </summary>
         public string region { get; set; }
     }
 
-    // класс DB - отвечает за взаимодействие с базой данных
+    /// <summary>
+    /// класс DB - отвечает за взаимодействие с базой данных
+    /// </summary>
     class DB
     {
+        /// <summary>
+        /// строка подключения к СУБД, считывается из файла конфигурации
+        /// </summary>
         private static String ConnectionString;// = "Data Source=ARTEM-PC;Initial Catalog=Countries_DB;Integrated Security=True";
 
-
+        /// <summary>
+        /// отправление запроса в СУБД 
+        /// </summary>
+        /// <param name="query">строка запроса</param>
+        /// <returns>DataTable - таблица данных</returns>
         public static DataTable SendQuery(string query)
         {
             // чтение XML-файла
@@ -158,6 +213,7 @@ namespace Test_task
             DataTable result = new DataTable();
             try
             {
+                // отправка запроса в СУБД
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -175,49 +231,71 @@ namespace Test_task
             return result;
         }
     }
-
-    // класс Dataviewer - отвечает за вывод информации в таблицу
+ 
+    /// <summary>
+    /// класс Dataviewer - отвечает за вывод информации в таблицу
+    /// </summary>
     class DataViewer
     {
+        /// <summary>
+        /// форма, на которой находится таблица для вывода записей
+        /// </summary>
         Form1 form;
 
+        /// <summary>
+        /// конструктор класса DataViewer
+        /// </summary>
+        /// <param name="form_">форма, на которой находится таблица для вывода записей</param>
         public DataViewer(Form1 form_)
         {
             form = form_;
         }
 
+        /// <summary>
+        /// изменение ширины столбца
+        /// </summary>
+        /// <param name="column_">номер столбца, ширину которого требуется изменить, начинается с 0</param>
+        /// <param name="width_">ширина столбца, которую требуется установить</param>
         public void SetColumnWidth(int column_, int width_)
         {
-            // изменение ширины столбца
             DataGridViewColumn column = form.dataGridView1.Columns[column_];
             column.Width = width_;
         }
 
+        /// <summary>
+        /// изменение ширины столбцов
+        /// </summary>
         public void SetColumnsWidth()
         {
-            // изменение ширины столбцов
             SetColumnWidth(0, 250); // для названия страны - пошире
             SetColumnWidth(1, 40); // для кода страны можно сделать узкий столбец
             SetColumnWidth(2, 140); // для названия столицы страны тоже можно сделать столбец пошире
             SetColumnWidth(5, 85); // для региона страны можно сделать столбец поуже
         }
 
+        /// <summary>
+        /// удаление столбцов
+        /// </summary>
         public void ClearColumns()
         {
             form.dataGridView1.Columns.Clear();
         }
 
+        /// <summary>
+        /// удаление столбцов и лишних строк
+        /// </summary>
         public void ClearAllCells()
         {
-            // удаление столбцов и лишних строк
             form.dataGridView1.DataSource = null;
             form.dataGridView1.RowCount = 1;
             form.dataGridView1.Columns.Clear();
         }
 
+        /// <summary>
+        /// добавление столбцов в DataGridView
+        /// </summary>
         public void CreateColumns()
         {
-            // добавление столбцов в таблицу
             form.dataGridView1.Columns.Add("name", "Название страны");
             form.dataGridView1.Columns.Add("alpha3Code", "Код");
             form.dataGridView1.Columns.Add("capital", "Столица");
@@ -227,6 +305,10 @@ namespace Test_task
             SetColumnsWidth();
         }
 
+        /// <summary>
+        /// вывод информации о стране в datagridview
+        /// </summary>
+        /// <param name="country_">информация о стране</param>
         public void Show(Country country_)
         {
             // если в datagridview есть столбцы - удаление столбцов и лишних строк
@@ -242,6 +324,10 @@ namespace Test_task
             form.dataGridView1.Rows[0].Cells["region"].Value = country_.region;
         }
 
+        /// <summary>
+        /// вывод информации о всех странах в базе данных
+        /// </summary>
+        /// <param name="datatable_">данные из БД</param>
         public void ShowTable(DataTable datatable_)
         {
             form.dataGridView1.DataSource = datatable_;
@@ -249,27 +335,52 @@ namespace Test_task
         }
     }
 
-    // класс Dialog - отвечает за вывод диалоговых окон
+    /// <summary>
+    /// класс Dialog - отвечает за вывод диалоговых окон
+    /// </summary>
     class Dialog
     {
+        /// <summary>
+        /// вывод простого MessageBox
+        /// </summary>
+        /// <param name="message_">текст, который будет отображен в MessageBox</param>
         public static void Message(string message_) 
         {
             MessageBox.Show(message_);
         }
 
+        /// <summary>
+        /// вывод MessageBox с кнопками Да/Нет с целью предложения сохранить полученные данные в БД
+        /// </summary>
+        /// <returns>DialogResult - какая кнопка была нажата</returns>
         public static DialogResult AskSaveOrNot()
         {
             return MessageBox.Show("Сохранить данные в базу данных?", "Сохранение", MessageBoxButtons.YesNo);
         }
     }
 
-    // класс DataManager - отвечает за получение данных из БД, а также добавление и изменение этих данных
+    /// <summary>
+    /// класс DataManager - отвечает за получение данных из БД, а также добавление и изменение этих данных 
+    /// </summary>
     class DataManager
     {
+        /// <summary>
+        /// форма, на которой находится таблица для вывода записей
+        /// </summary>
         Form1 form;
+        /// <summary>
+        /// объект класса DataViewer для обращения к нему с целью вывода информации
+        /// </summary>
         DataViewer dataviewer;
+        /// <summary>
+        /// объект класса UIManager для обращения к нему с целью изменения свойств элементов интерфейса
+        /// </summary>
         UIManager UImanager;
 
+        /// <summary>
+        /// конструктор класса DataManager, создание объектов классов, с которыми он взаимодействует
+        /// </summary>
+        /// <param name="form_">форма, на которой находится таблица для вывода записей</param>
         public DataManager(Form1 form_)
         {
             form = form_;
@@ -277,23 +388,49 @@ namespace Test_task
             UImanager = new UIManager(form_);
         }
 
+        /// <summary>
+        /// вывод количества записей из таблицы в БД
+        /// </summary>
+        /// <param name="table_">таблица, кол-во записей в которой требуется посчитать</param>
+        /// <param name="column_">столбец, по которому производится поиск</param>
+        /// <param name="value_">значение, по которому производится поиск</param>
+        /// <returns>количество записей с требуемым значением в требуемом столбце</returns>
         public static int GetCount(string table_, string column_, string value_)
         {
             DataTable Data = DB.SendQuery("SELECT * FROM " + table_ + " WHERE " + column_ + " = '" + value_ + "';");
             return Data.Rows.Count;
         }
 
+        /// <summary>
+        /// добавление записи в БД
+        /// </summary>
+        /// <param name="table_">таблица, в которую добавляется запись</param>
+        /// <param name="column_">столбец, в который записывается значение</param>
+        /// <param name="value_">значение, которое записывается в столбец в таблице</param>
         public static void Insert(string table_, string column_, string value_)
         {
             DB.SendQuery("INSERT INTO " + table_ + " (" + column_ + ") VALUES ('" + value_ + "');");
         }
 
+        /// <summary>
+        /// получение ID записи в таблице в БД
+        /// </summary>
+        /// <param name="table_">таблица, в которой производится поиск записи</param>
+        /// <param name="column_">столбец, в котором производится поиск требуемого значения</param>
+        /// <param name="value_">значение, по которому производится поиск</param>
+        /// <returns>ID записи с найденным значением</returns>
         public static int GetElementId(string table_, string column_, string value_)
         {
             DataTable Data = DB.SendQuery("SELECT * FROM " + table_ + " WHERE " + column_ + " = '" + value_ + "';");
             return Convert.ToInt32(Data.Rows[0].ItemArray[0]);
         }
 
+        /// <summary>
+        /// добавление записи о стране в таблицу стран
+        /// </summary>
+        /// <param name="country_">страна, запись о которой добавляется в таблицу</param>
+        /// <param name="city_">ID столицы страны (из таблицы городов)</param>
+        /// <param name="region_">ID региона, в котором находится страна (из таблицы регионов)</param>
         public static void InsertCountry(Country country_, int city_, int region_)
         {
             DB.SendQuery("INSERT INTO dbo.Countries (CountryName, CountryCode, CountryCapital, CountryArea, CountryPopulation, CountryRegion) " +
@@ -301,6 +438,12 @@ namespace Test_task
                 country_.population + ", " + region_ + ");");
         }
 
+        /// <summary>
+        /// обновление записи о стране в таблице стран
+        /// </summary>
+        /// <param name="country_">страна, запись о которой обновляется в таблице</param>
+        /// <param name="city_">ID столицы страны (из таблицы городов)</param>
+        /// <param name="region_">ID региона, в котором находится страна (из таблицы регионов)</param>
         public static void UpdateCountry(Country country_, int city_, int region_)
         {
             DB.SendQuery("UPDATE dbo.Countries SET CountryName = '" + country_.name + "', CountryCode = '" + country_.alpha3Code + 
@@ -308,6 +451,12 @@ namespace Test_task
                 country_.population + ", " + "CountryRegion = " + region_ + " WHERE CountryCode = '" + country_.alpha3Code + "';");
         }
 
+        /// <summary>
+        /// вывод данных в отсортированном или неотсортированном виде
+        /// </summary>
+        /// <param name="column_">столбец, по которому производится сортировка</param>
+        /// <param name="order_">порядок сортировки (по возрастанию/по убыванию)</param>
+        /// <param name="sort_">производится ли сортировка (true/false)</param>
         public void SortDataBy(string column_, string order_, bool sort_ = true)
         {
             dataviewer.ClearColumns();
@@ -321,11 +470,17 @@ namespace Test_task
                 Dialog.Message("В базе данных нет ни одной записи.");
         }
 
+        /// <summary>
+        /// вывод данных в неотсортированном виде
+        /// </summary>
         public void GetUnsortedData()
         {
             SortDataBy("", "", false);
         }
 
+        /// <summary>
+        /// вывод данных в отсортированном виде
+        /// </summary>
         public void GetSortedData()
         {
             switch (form.SortComboBox.SelectedItem)
@@ -364,40 +519,70 @@ namespace Test_task
         }
     }
 
-    // класс UIManager - класс, отвечающий за изменения свойств прочих элементов графического интерфейса
+    /// <summary>
+    /// класс UIManager - класс, отвечающий за изменения свойств прочих элементов графического интерфейса 
+    /// </summary>
     class UIManager
     {
+        /// <summary>
+        /// форма, на которой находится таблица для вывода записей
+        /// </summary>
         Form1 form;
 
+        /// <summary>
+        /// конструктор класса UIManager
+        /// </summary>
+        /// <param name="form_">форма, на которой находится таблица для вывода записей</param>
         public UIManager(Form1 form_)
         {
             form = form_;
         }
 
+        /// <summary>
+        /// очистка строки поиска страны
+        /// </summary>
         public void ClearCountryTextBox()
         {
             form.CountryTextBox.Text = "";
         }
 
+        /// <summary>
+        /// очистка текста в ComboBox для сортировки
+        /// </summary>
         public void ClearSortComboBox()
         {
             form.SortComboBox.Text = "";
         }
 
+        /// <summary>
+        /// установка текста в ComboBox для сортировки
+        /// </summary>
+        /// <param name="text_">текст сообщения, выводимый в MessageBox</param>
         public void SetSortComboBoxText(string text_)
         {
             form.SortComboBox.Text = text_;
         }
 
+        /// <summary>
+        /// установка RadioButton в состояние Checked
+        /// </summary>
+        /// <param name="rb_">RadioButton, который требуется возвести в Checked</param>
         public void CheckRadioButton(RadioButton rb_)
         {
             rb_.Checked = true;
         }
     }
 
-    // класс DataReceiver - класс, отвечающий за получение данных
+    /// <summary>
+    /// класс DataReceiver - класс, отвечающий за получение данных 
+    /// </summary>
     class DataReceiver
     {
+        /// <summary>
+        /// получение информации о стране
+        /// </summary>
+        /// <param name="country_">название страны, информацию о которой требуется найти</param>
+        /// <returns>данные о стране</returns>
         public static Country GetInfo(string country_)
         {
             WebClient webclient = new WebClient();
