@@ -178,14 +178,14 @@ namespace Test_task
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox CountryTextBox;
+        public System.Windows.Forms.TextBox CountryTextBox { get; set; }
         private System.Windows.Forms.Button SearchButton;
         private System.Windows.Forms.Button DataBaseButton;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.ComboBox SortComboBox;
+        public System.Windows.Forms.DataGridView dataGridView1 { get; set; }
+        public System.Windows.Forms.ComboBox SortComboBox { get; set; }
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton AscRadioButton;
-        private System.Windows.Forms.RadioButton DescRadioButton;
+        public System.Windows.Forms.RadioButton AscRadioButton { get; set; }
+        public System.Windows.Forms.RadioButton DescRadioButton { get; set; }
     }
 }
 
