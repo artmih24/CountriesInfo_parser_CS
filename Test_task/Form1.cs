@@ -263,7 +263,7 @@ namespace Test_task
         }
     }
 
-    // класс DataManager - отвечает за получение данных из БД
+    // класс DataManager - отвечает за получение данных из БД, а также добавление и изменение этих данных
     class DataManager
     {
         Form1 form;
