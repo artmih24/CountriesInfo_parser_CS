@@ -268,11 +268,13 @@ namespace Test_task
     {
         Form1 form;
         DataViewer dataviewer;
+        UIManager UImanager;
 
         public DataManager(Form1 form_)
         {
             form = form_;
             dataviewer = new DataViewer(form_);
+            UImanager = new UIManager(form_);
         }
 
         public static int GetCount(string table_, string column_, string value_)
@@ -330,32 +332,32 @@ namespace Test_task
             {
                 case "По названию страны":
                     if (form.AscRadioButton.Checked == false && form.DescRadioButton.Checked == false)
-                        form.AscRadioButton.Checked = true;
+                        UImanager.CheckRadioButton(form.AscRadioButton);
                     SortDataBy("cnt.CountryName", form.AscRadioButton.Checked ? "ASC" : "DESC");
                     break;
                 case "По коду страны":
                     if (form.AscRadioButton.Checked == false && form.DescRadioButton.Checked == false)
-                        form.AscRadioButton.Checked = true;
+                        UImanager.CheckRadioButton(form.AscRadioButton);
                     SortDataBy("cnt.CountryCode", form.AscRadioButton.Checked ? "ASC" : "DESC");
                     break;
                 case "По названию столицы":
                     if (form.AscRadioButton.Checked == false && form.DescRadioButton.Checked == false)
-                        form.AscRadioButton.Checked = true;
+                        UImanager.CheckRadioButton(form.AscRadioButton);
                     SortDataBy("ct.CityName", form.AscRadioButton.Checked ? "ASC" : "DESC");
                     break;
                 case "По площади страны":
                     if (form.AscRadioButton.Checked == false && form.DescRadioButton.Checked == false)
-                        form.DescRadioButton.Checked = true;
+                        UImanager.CheckRadioButton(form.DescRadioButton);
                     SortDataBy("cnt.CountryArea", form.AscRadioButton.Checked ? "ASC" : "DESC");
                     break;
                 case "По населению страны":
                     if (form.AscRadioButton.Checked == false && form.DescRadioButton.Checked == false)
-                        form.DescRadioButton.Checked = true;
+                        UImanager.CheckRadioButton(form.DescRadioButton);
                     SortDataBy("cnt.CountryPopulation", form.AscRadioButton.Checked ? "ASC" : "DESC");
                     break;
                 case "По названию региона":
                     if (form.AscRadioButton.Checked == false && form.DescRadioButton.Checked == false)
-                        form.AscRadioButton.Checked = true;
+                        UImanager.CheckRadioButton(form.AscRadioButton);
                     SortDataBy("r.RegionName", form.AscRadioButton.Checked ? "ASC" : "DESC");
                     break;
             }
@@ -385,6 +387,11 @@ namespace Test_task
         public void SetSortComboBoxText(string text_)
         {
             form.SortComboBox.Text = text_;
+        }
+
+        public void CheckRadioButton(RadioButton rb_)
+        {
+            rb_.Checked = true;
         }
     }
 
