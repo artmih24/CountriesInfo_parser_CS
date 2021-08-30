@@ -23,12 +23,7 @@ namespace Test_task
         /// <returns>DataTable - таблица данных из БД</returns>
         public static DataTable SendQuery(string query)
         {
-            // чтение файла конфигурации (в виде простого текстового файла)
-            var reader = new StreamReader("connection.config");
-            connectionString = reader.ReadToEnd();
-            // приведение строки к правильному виду (добавление ";" перед концом строки
-            // и удаление ";" если есть лишние)
-            connectionString = connectionString.Replace("\n", ";\n").Replace(";;", ";");
+            connectionString = ConfigurationManager.GetConnectionString("connection.config");
             // инициализация объекта класса SqlConnection для подключения к БД
             var connection = new SqlConnection(connectionString);
             var result = new DataTable();
