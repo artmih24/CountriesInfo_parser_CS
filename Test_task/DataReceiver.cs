@@ -41,17 +41,17 @@ namespace Test_task
                     return null;
                 }
             }
-            catch (TimeoutException timeoutException)
+            catch (TimeoutException e)
             {
-                Dialog.Message("Возникла ошибка при получении данных\n" + timeoutException.Message);
+                Dialog.Message("Возникла ошибка при получении данных\n" + e.Message);
                 return null;
             }
-            catch (WebException webException)
+            catch (WebException e)
             {
-                var status = webException.Status;
+                var status = e.Status;
                 if (status == WebExceptionStatus.ProtocolError)
                 {
-                    var httpResponse = (HttpWebResponse)webException.Response;
+                    var httpResponse = (HttpWebResponse)e.Response;
                     Dialog.Message("Возникла ошибка при получении данных " +
                         (int)httpResponse.StatusCode + " - " + httpResponse.StatusCode);
                 }

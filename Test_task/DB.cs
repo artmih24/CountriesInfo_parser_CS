@@ -35,17 +35,17 @@ namespace Test_task
                 var adapter = new SqlDataAdapter(command);
                 adapter.Fill(result);
             }
-            catch (SqlException sqlException)
+            catch (SqlException e)
             {
-                Dialog.Message(sqlException.Message);
+                Dialog.Message(e.Message);
             }
-            catch (TimeoutException timeoutException)
+            catch (TimeoutException e)
             {
-                Dialog.Message(timeoutException.Message);
+                Dialog.Message(e.Message);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Dialog.Message(ex.Message);
+                Dialog.Message(e.Message);
             }
             finally
             {

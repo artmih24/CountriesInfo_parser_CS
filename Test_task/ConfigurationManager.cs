@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Test_task
 {
@@ -15,8 +16,26 @@ namespace Test_task
         /// <returns>содержимое текстового файла</returns>
         public static string ReadFile(string filePath)
         {
-            var reader = new StreamReader(filePath);
-            return reader.ReadToEnd();
+            try
+            {
+                var reader = new StreamReader(filePath);
+                return reader.ReadToEnd();
+            }
+            catch (FileNotFoundException e)
+            {
+                Dialog.Message("Файл не найден\n" + e.Message);
+                return null;
+            }
+            catch (FileLoadException e)
+            {
+                Dialog.Message("Не удалось загрузить файл\n" + e.Message);
+                return null;
+            }
+            catch (Exception e)
+            {
+                Dialog.Message("Возникла ошибка\n" + e.Message);
+                return null;
+            }
         }
 
         /// <summary>
