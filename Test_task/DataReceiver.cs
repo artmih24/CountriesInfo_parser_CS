@@ -41,6 +41,11 @@ namespace Test_task
                     return null;
                 }
             }
+            catch (TimeoutException timeoutException)
+            {
+                Dialog.Message("Возникла ошибка при получении данных\n" + timeoutException.Message);
+                return null;
+            }
             catch (WebException webException)
             {
                 var status = webException.Status;
